@@ -400,6 +400,32 @@ function propertiesToTable(properties) {
 
 // import and export
 
+const blaurl = new URL(window.location.href);
+const showGeoJsonFromUrl = blaurl.searchParams.get("showGeoJsonFromUrl");
+
+
+if (showGeoJsonFromUrl) {
+    $.get(showGeoJsonFromUrl)
+    .done(function (data) {
+        if (showGeoJsonFromUrl.endsWith('json')) {
+            JSONLayer.addData(data);
+            if (JSONLayer.getBounds().isValid()) {
+                lmap.fitBounds(JSONLayer.getBounds());
+            }
+            toast({
+                type: 'success',
+                title: 'Import successfully'
+            })
+        }
+    })
+    .fail(function () {
+        toast({
+            type: 'error',
+            title: 'Import failed'
+        })
+    });
+}
+
 // import from url
 let urlInput = $('#url-address')[0];
 $('#btn-import-from-url').click(function () {
