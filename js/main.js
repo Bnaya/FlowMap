@@ -402,6 +402,23 @@ function propertiesToTable(properties) {
 
 const blaurl = new URL(window.location.href);
 const showGeoJsonFromUrl = blaurl.searchParams.get("showGeoJsonFromUrl");
+const postgrestKombina = blaurl.searchParams.get("postgrestKombina");
+
+if (postgrestKombina) {
+    $.get(postgrestKombina).done((topLevelJson) => {
+        const inner = JSON.parse(topLevelJson[0].polygon_as_geojson);
+
+        // console.log(inner);
+        JSONLayer.addData(inner);
+        if (JSONLayer.getBounds().isValid()) {
+            lmap.fitBounds(JSONLayer.getBounds());
+        }
+        toast({
+            type: 'success',
+            title: 'Import successfully'
+        })
+    });
+}
 
 
 if (showGeoJsonFromUrl) {
